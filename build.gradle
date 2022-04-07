@@ -12,3 +12,15 @@ repositories {
 application {
     mainClass = 'com.vizor.test.Main'
 }
+
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+}
+
+test {
+    useJUnit()
+
+    maxHeapSize = '1G'
+}
