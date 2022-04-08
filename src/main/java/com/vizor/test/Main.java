@@ -1,5 +1,6 @@
 package com.vizor.test;
 
+import com.vizor.test.exception.ControllerException;
 import com.vizor.test.gui.ImageGalleryFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,12 +15,17 @@ public class Main {
     private static final String FRAME_TITLE = "DT Developer Test";
 
     public void run() {
-        JFrame frame = new ImageGalleryFrame(FRAME_TITLE, WIDTH, HEIGHT);
+        try {
+            JFrame frame = new ImageGalleryFrame(FRAME_TITLE, WIDTH, HEIGHT);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+            frame.setVisible(true);
+            frame.setLocationRelativeTo(null);
+        } catch (ControllerException exception) {
+            LOGGER.error(exception.getMessage());
+            JOptionPane.showMessageDialog(null, exception.getMessage());
+        }
     }
 
     public static void main(String[] args) {
