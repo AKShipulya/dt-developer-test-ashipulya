@@ -1,4 +1,4 @@
-package com.vizor.test.helper;
+package com.vizor.test.util;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
