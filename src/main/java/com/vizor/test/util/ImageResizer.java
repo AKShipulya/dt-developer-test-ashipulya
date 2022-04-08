@@ -3,11 +3,11 @@ package com.vizor.test.util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class ImageHelper {
+public class ImageResizer {
     private static final int IMAGE_WIDTH = 300;
     private static final int IMAGE_HEIGHT = 140;
 
-    private ImageHelper() {
+    private ImageResizer() {
     }
 
     public static BufferedImage getResizedImage(BufferedImage image) {

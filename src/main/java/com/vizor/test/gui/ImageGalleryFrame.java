@@ -3,7 +3,7 @@ package com.vizor.test.gui;
 import com.vizor.test.controller.ImageController;
 import com.vizor.test.exception.ControllerException;
 import com.vizor.test.exception.ServiceException;
-import com.vizor.test.helper.ImageHelper;
+import com.vizor.test.util.ImageResizer;
 import com.vizor.test.model.Image;
 import com.vizor.test.repository.ImageRepository;
 import com.vizor.test.repository.impl.ImageRepositoryImpl;
@@ -82,7 +82,7 @@ public class ImageGalleryFrame extends JFrame {
 
     private void imageInitialization(Image image) {
         JButton button = new JButton();
-        button.setIcon(new ImageIcon(ImageHelper.getResizedImage(image.getBufferedImage())));
+        button.setIcon(new ImageIcon(ImageResizer.getResizedImage(image.getBufferedImage())));
         button.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
             JScrollPane scrollPane = new JScrollPane(new JLabel(new ImageIcon(image.getBufferedImage())));
