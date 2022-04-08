@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 
 public class ImageResizer {
 
-    private static final int IMAGE_WIDTH = 200;
-    private static final int IMAGE_HEIGHT = 200;
+    private static final int IMAGE_WIDTH = 180;
+    private static final int IMAGE_HEIGHT = 180;
 
     private ImageResizer() {
     }

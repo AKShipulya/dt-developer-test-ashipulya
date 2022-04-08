@@ -31,7 +31,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                         imageName.endsWith(".png");
             });
             if (files != null && files.length != 0) {
-                throw new DataException("Image with this name is exists");
+                throw new DataException("Image with this name already exists");
             }
             ImageIO.write(bufferedImage, "png", file);
         } catch (IOException exception) {

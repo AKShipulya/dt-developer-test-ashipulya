@@ -12,7 +12,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${property_console}"/>
         </Console>
-        <RollingFile name="FileRolling" fileName="logs/multithreading.log" append="true"
+        <RollingFile name="FileRolling" fileName="logs/image-gallery-logs.log" append="true"
                      filePattern="logs/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}.txt">
             <PatternLayout pattern="${property_file}"/>
             <Policies>

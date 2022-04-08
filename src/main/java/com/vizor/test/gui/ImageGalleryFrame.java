@@ -62,10 +62,8 @@ public class ImageGalleryFrame extends JFrame {
 
     private void mainContentPanelInitialization() throws ControllerException {
         mainContentPanel = new JPanel();
-        mainContentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        mainContentPanel.setLayout(new GridLayout(0,4,2,2));
         mainContentPanel.setBackground(Color.WHITE);
-        scrollPane = new JScrollPane(mainContentPanel); // TODO: 08.04.2022 scrollpane does't work!!!
-
         List<Image> images = imageController.getImageList();
         fillingTheContentSectionWithImages(images);
     }
@@ -74,10 +72,11 @@ public class ImageGalleryFrame extends JFrame {
         Container container = this.getContentPane();
         container.setLayout(new BorderLayout(0, 1));
         container.setBackground(Color.GRAY);
-
         container.add(new JPanel());
         container.add(headerPanel, BorderLayout.NORTH);
         container.add(mainContentPanel);
+        scrollPane = new JScrollPane(mainContentPanel);
+        container.add(scrollPane);
     }
 
     private void openImageSeparateWindow(Image image) {
