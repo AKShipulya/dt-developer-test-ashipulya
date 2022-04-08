@@ -1,6 +1,7 @@
 package com.vizor.test.gui;
 
 import com.vizor.test.controller.ImageController;
+import com.vizor.test.exception.ApplicationException;
 import com.vizor.test.exception.ControllerException;
 import com.vizor.test.exception.ServiceException;
 import com.vizor.test.model.Image;
@@ -31,7 +32,7 @@ public class ImageGalleryFrame extends JFrame {
     private JPanel mainContentPanel;
 
 
-    public ImageGalleryFrame(String title, Integer width, Integer height) throws ControllerException {
+    public ImageGalleryFrame(String title, Integer width, Integer height) throws ControllerException { // TODO: 08.04.2022 Bad idea add exception in constructor!!!
         super(title);
         this.width = width;
         this.height = height;
@@ -118,7 +119,14 @@ public class ImageGalleryFrame extends JFrame {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
                 }
             }
-            mainContentPanel.revalidate();
+            try {
+                mainContentPanel.removeAll();
+                List<Image> images = imageController.getImageList();
+                fillingTheContentSectionWithImages(images);
+                mainContentPanel.revalidate();
+            } catch (ControllerException exception) {
+                LOGGER.error(String.format("Error during new file saving process %s", exception.getMessage()));
+            }
         });
     }
 }
