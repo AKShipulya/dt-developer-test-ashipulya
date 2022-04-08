@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ImageController {
 
-    private final static Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private final ImageService imageService;
 
@@ -20,7 +20,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    public void addImage(File file) throws ControllerException, ServiceException {
+    public void addImage(File file) throws ServiceException {
         imageService.addImage(file);
     }
 

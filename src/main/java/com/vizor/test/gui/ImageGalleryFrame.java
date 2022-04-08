@@ -3,12 +3,12 @@ package com.vizor.test.gui;
 import com.vizor.test.controller.ImageController;
 import com.vizor.test.exception.ControllerException;
 import com.vizor.test.exception.ServiceException;
-import com.vizor.test.util.ImageResizer;
 import com.vizor.test.model.Image;
 import com.vizor.test.repository.ImageRepository;
 import com.vizor.test.repository.impl.ImageRepositoryImpl;
 import com.vizor.test.service.ImageService;
 import com.vizor.test.service.impl.ImageServiceImpl;
+import com.vizor.test.util.ImageResizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,22 +16,19 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ImageGalleryFrame extends JFrame {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
     private final Integer width;
     private final Integer height;
     private final JButton addButton;
     private final ImageController imageController;
 
+    private JScrollPane scrollPane;
     private JPanel headerPanel;
     private JPanel mainContentPanel;
-    private boolean loaded = false;
 
 
     public ImageGalleryFrame(String title, Integer width, Integer height) throws ControllerException {
@@ -47,72 +44,70 @@ public class ImageGalleryFrame extends JFrame {
         headerPanelInitialization();
         mainContentPanelInitialization();
         contentContainerInitialization();
-        actionListenerInitialization();
+        addNewImageWithFileChooser();
     }
 
 
     private void headerPanelInitialization() {
         headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 4, 4));
+        headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        headerPanel.setBackground(Color.WHITE);
 
         JPanel gridPanel = new JPanel();
-        gridPanel.setLayout(new GridLayout(1, 1, 2, 2));
-        addButton.setBackground(Color.LIGHT_GRAY);
+        gridPanel.setLayout(new GridLayout(1, 1));
+        addButton.setBackground(Color.WHITE);
         gridPanel.add(addButton);
         headerPanel.add(gridPanel);
     }
 
     private void mainContentPanelInitialization() throws ControllerException {
         mainContentPanel = new JPanel();
-        mainContentPanel.setLayout(new GridLayout(5, 5, 10, 10));
+        mainContentPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainContentPanel.setBackground(Color.WHITE);
+        scrollPane = new JScrollPane(mainContentPanel); // TODO: 08.04.2022 scrollpane does't work!!!
 
         List<Image> images = imageController.getImageList();
-        imageListInitialization(images);
+        fillingTheContentSectionWithImages(images);
     }
 
     private void contentContainerInitialization() {
         Container container = this.getContentPane();
-        container.setLayout(new BorderLayout(2, 2));
+        container.setLayout(new BorderLayout(0, 1));
+        container.setBackground(Color.GRAY);
 
         container.add(new JPanel());
         container.add(headerPanel, BorderLayout.NORTH);
         container.add(mainContentPanel);
     }
 
-    private void imageInitialization(Image image) {
-        JButton button = new JButton();
-        button.setIcon(new ImageIcon(ImageResizer.getResizedImage(image.getBufferedImage())));
-        button.addActionListener(e -> {
+    private void openImageSeparateWindow(Image image) {
+        JButton imageButton = new JButton();
+        imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImage(image.getBufferedImage())));
+        imageButton.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
-            JScrollPane scrollPane = new JScrollPane(new JLabel(new ImageIcon(image.getBufferedImage())));
-            frame.add(scrollPane);
-            frame.setMinimumSize(new Dimension(width, height));
+            JPanel picturePanel = new JPanel();
+            frame.add(picturePanel.add(new JLabel(new ImageIcon(image.getBufferedImage()))));
+            frame.setSize(new Dimension(image.getBufferedImage().getWidth() + 20, image.getBufferedImage().getHeight() + 45));
+            frame.setMinimumSize(new Dimension(image.getBufferedImage().getWidth(), image.getBufferedImage().getHeight()));
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(2, 2));
-        panel.add(button, BorderLayout.CENTER);
+        panel.add(imageButton, BorderLayout.CENTER);
         panel.add(new JLabel(image.getName()), BorderLayout.SOUTH);
         mainContentPanel.add(panel);
     }
 
-    private void imageListInitialization(List<Image> images) {
-        if (!loaded) {
-            loaded = true;
-            THREAD_POOL.submit(() -> {
-                for (Image image : images) {
-                    imageInitialization(image);
-                }
-                mainContentPanel.revalidate();
-                loaded = false;
-            });
+    private void fillingTheContentSectionWithImages(List<Image> images) {
+        for (Image image : images) {
+            openImageSeparateWindow(image);
         }
+        mainContentPanel.revalidate();
     }
 
-    private void actionListenerInitialization() {
+    private void addNewImageWithFileChooser() {
         addButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter(".png", "png"));
@@ -120,7 +115,7 @@ public class ImageGalleryFrame extends JFrame {
             if (ret == JFileChooser.APPROVE_OPTION) {
                 try {
                     imageController.addImage(fileChooser.getSelectedFile());
-                } catch (ControllerException | ServiceException exception) {
+                } catch (ServiceException exception) {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
                 }
             }

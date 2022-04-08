@@ -47,7 +47,7 @@ public class ImageRepositoryImpl implements ImageRepository {
             String imageName = path.getName().toLowerCase();
             return path.isFile() && imageName.endsWith(".png");
         });
-        LOGGER.info("Received list of images");
+        LOGGER.info("List of images has been received");
         return initImageList(files);
     }
 

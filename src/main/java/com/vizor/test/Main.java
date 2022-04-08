@@ -1,5 +1,6 @@
 package com.vizor.test;
 
+import com.vizor.test.exception.ApplicationException;
 import com.vizor.test.exception.ControllerException;
 import com.vizor.test.gui.ImageGalleryFrame;
 import org.apache.logging.log4j.LogManager;
