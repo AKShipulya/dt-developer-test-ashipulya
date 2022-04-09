@@ -17,7 +17,7 @@ public class Main {
 
     public void run() {
         try {
-            JFrame frame = new ImageGalleryFrame(FRAME_TITLE, WIDTH, HEIGHT);
+            JFrame frame = new ImageGalleryFrame(FRAME_TITLE);
 
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));

@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ImageRepositoryImpl implements ImageRepository {
@@ -55,19 +56,19 @@ public class ImageRepositoryImpl implements ImageRepository {
         if (files == null) {
             return images;
         }
-        int count = 0;
-        while (count < files.length) {
-            try {
-                String name = files[count].getName().split("\\.", 2)[0];
-                images.add(new ImageBuilder().setName(name)
-                        .setBufferedImage(ImageIO.read(files[count]))
-                        .build());
-            } catch (IOException exception) {
-                LOGGER.error("Images uploading error {}", exception.getMessage());
-                throw new DataException(exception);
-            }
-            count++;
-        }
+
+        Arrays.stream(files)
+                .forEach(file -> {
+                    try {
+                        String name = file.getName().split("\\.", 2)[0];
+                        images.add(new ImageBuilder().setName(name)
+                                .setBufferedImage(ImageIO.read(file))
+                                .build());
+                    } catch (IOException exception) {
+                        LOGGER.error("Images uploading error {}", exception.getMessage());
+                        throw new DataException(exception);
+                    }
+                });
         return images;
     }
 }

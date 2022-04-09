@@ -1,8 +1,8 @@
 package com.vizor.test.gui;
 
 import com.vizor.test.controller.ImageController;
-import com.vizor.test.exception.ServiceException;
 import com.vizor.test.model.Image;
+import com.vizor.test.model.builder.ImageBuilder;
 import com.vizor.test.repository.ImageRepository;
 import com.vizor.test.repository.impl.ImageRepositoryImpl;
 import com.vizor.test.service.ImageService;
@@ -11,17 +11,17 @@ import com.vizor.test.util.ImageResizer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class ImageGalleryFrame extends JFrame {
 
     private static final Logger LOGGER = LogManager.getLogger();
 
-    private final Integer width;
-    private final Integer height;
     private final JButton addButton;
     private final ImageController imageController;
 
@@ -30,10 +30,8 @@ public class ImageGalleryFrame extends JFrame {
     private JPanel mainContentPanel;
 
 
-    public ImageGalleryFrame(String title, Integer width, Integer height) {
+    public ImageGalleryFrame(String title) {
         super(title);
-        this.width = width;
-        this.height = height;
         ImageRepository repository = new ImageRepositoryImpl();
         ImageService service = new ImageServiceImpl(repository);
         imageController = new ImageController(service);
@@ -64,7 +62,7 @@ public class ImageGalleryFrame extends JFrame {
         mainContentPanel.setLayout(new GridLayout(0, 4, 2, 2));
         mainContentPanel.setBackground(Color.WHITE);
         List<Image> images = imageController.getImageList();
-        fillingTheContentSectionWithImages(images);
+        imageListInitialization(images);
     }
 
     private void contentContainerInitialization() {
@@ -98,14 +96,14 @@ public class ImageGalleryFrame extends JFrame {
             frame.setLocationRelativeTo(null);
         });
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(2, 2));
-        panel.add(imageButton, BorderLayout.CENTER);
-        panel.add(new JLabel(image.getName()), BorderLayout.SOUTH);
-        mainContentPanel.add(panel);
+        JPanel imageBox = new JPanel();
+        imageBox.setLayout(new BorderLayout(2, 2));
+        imageBox.add(imageButton, BorderLayout.CENTER);
+        imageBox.add(new JLabel(image.getName()), BorderLayout.SOUTH);
+        mainContentPanel.add(imageBox);
     }
 
-    private void fillingTheContentSectionWithImages(List<Image> images) {
+    private void imageListInitialization(List<Image> images) {
         for (Image image : images) {
             openImageSeparateWindow(image);
         }
@@ -120,14 +118,16 @@ public class ImageGalleryFrame extends JFrame {
             if (ret == JFileChooser.APPROVE_OPTION) {
                 try {
                     imageController.addImage(fileChooser.getSelectedFile());
-                } catch (ServiceException exception) {
+                    BufferedImage newBufferedImage = ImageIO.read(fileChooser.getSelectedFile());
+                    Image newImage = new ImageBuilder().setName(fileChooser.getSelectedFile().getName())
+                            .setBufferedImage(newBufferedImage)
+                            .build();
+                    openImageSeparateWindow(newImage);
+                    mainContentPanel.revalidate();
+                } catch (Exception exception) {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
                 }
             }
-            mainContentPanel.removeAll();
-            List<Image> images = imageController.getImageList();
-            fillingTheContentSectionWithImages(images);
-            mainContentPanel.revalidate();
         });
     }
 }
