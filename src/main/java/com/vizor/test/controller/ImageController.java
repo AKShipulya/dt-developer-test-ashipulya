@@ -1,7 +1,5 @@
 package com.vizor.test.controller;
 
-import com.vizor.test.exception.ControllerException;
-import com.vizor.test.exception.ServiceException;
 import com.vizor.test.model.Image;
 import com.vizor.test.service.ImageService;
 import org.apache.logging.log4j.LogManager;
@@ -20,16 +18,12 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    public void addImage(File file) throws ServiceException {
+    public void addImage(File file) {
         imageService.addImage(file);
+        //TODO logs
     }
 
-    public List<Image> getImageList() throws ControllerException {
-        try {
-            return imageService.getImageList();
-        } catch (ServiceException exception) {
-            LOGGER.error(String.format("Images list cannot be received %s", exception.getMessage()));
-            throw new ControllerException(exception);
-        }
+    public List<Image> getImageList() {
+        return imageService.getImageList();
     }
 }

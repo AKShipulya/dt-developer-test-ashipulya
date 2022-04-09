@@ -1,6 +1,6 @@
 package com.vizor.test.exception;
 
-public class DataException extends Exception {
+public class DataException extends RuntimeException {
 
     public DataException() {
         super();

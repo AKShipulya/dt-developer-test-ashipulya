@@ -1,6 +1,5 @@
 package com.vizor.test.repository.impl;
 
-import com.vizor.test.exception.ApplicationException;
 import com.vizor.test.exception.DataException;
 import com.vizor.test.model.Image;
 import com.vizor.test.model.builder.ImageBuilder;
