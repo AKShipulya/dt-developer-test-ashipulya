@@ -30,14 +30,14 @@ public class ImageRepositoryImpl implements ImageRepository {
                         imageName.endsWith(".png");
             });
             if (files != null && files.length != 0) {
-                throw new DataException("Image with this name already exists");
+                throw new DataException(String.format("Image with this name already exists: %s", name));
             }
             ImageIO.write(bufferedImage, "png", file);
         } catch (IOException exception) {
-            LOGGER.error(String.format("Error %s", exception.getMessage()));
+            LOGGER.error("File reading error, file: {}, error: {}", name, exception.getMessage());
             throw new DataException(exception);
         }
-        LOGGER.info("New image added");
+        LOGGER.info("New image added {}", name);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                         .setBufferedImage(ImageIO.read(files[count]))
                         .build());
             } catch (IOException exception) {
-                LOGGER.error(String.format("Images uploading error %s", exception.getMessage()));
+                LOGGER.error("Images uploading error {}", exception.getMessage());
                 throw new DataException(exception);
             }
             count++;

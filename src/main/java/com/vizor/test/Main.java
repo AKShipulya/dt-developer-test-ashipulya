@@ -1,6 +1,7 @@
 package com.vizor.test;
 
-import com.vizor.test.exception.ControllerException;
+import com.vizor.test.exception.DataException;
+import com.vizor.test.exception.ServiceException;
 import com.vizor.test.gui.ImageGalleryFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +23,8 @@ public class Main {
             frame.setMinimumSize(new Dimension(WIDTH, HEIGHT));
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
-        } catch (ControllerException exception) {
-            LOGGER.error(exception.getMessage());
+        } catch (ServiceException | DataException exception) {
+            LOGGER.error("Error {}", exception.getMessage());
             JOptionPane.showMessageDialog(null, exception.getMessage());
         }
     }

@@ -1,7 +1,6 @@
 package com.vizor.test.gui;
 
 import com.vizor.test.controller.ImageController;
-import com.vizor.test.exception.ControllerException;
 import com.vizor.test.exception.ServiceException;
 import com.vizor.test.model.Image;
 import com.vizor.test.repository.ImageRepository;
@@ -31,7 +30,7 @@ public class ImageGalleryFrame extends JFrame {
     private JPanel mainContentPanel;
 
 
-    public ImageGalleryFrame(String title, Integer width, Integer height) throws ControllerException { // TODO: 08.04.2022 Bad idea add exception in constructor!!!
+    public ImageGalleryFrame(String title, Integer width, Integer height) {
         super(title);
         this.width = width;
         this.height = height;
@@ -60,9 +59,9 @@ public class ImageGalleryFrame extends JFrame {
         headerPanel.add(gridPanel);
     }
 
-    private void mainContentPanelInitialization() throws ControllerException {
+    private void mainContentPanelInitialization() {
         mainContentPanel = new JPanel();
-        mainContentPanel.setLayout(new GridLayout(0,4,2,2));
+        mainContentPanel.setLayout(new GridLayout(0, 4, 2, 2));
         mainContentPanel.setBackground(Color.WHITE);
         List<Image> images = imageController.getImageList();
         fillingTheContentSectionWithImages(images);
@@ -88,7 +87,7 @@ public class ImageGalleryFrame extends JFrame {
 
             if (image.getBufferedImage().getHeight() > 768 && image.getBufferedImage().getWidth() > 1024) {
                 frame.add(picturePanel.add(new JLabel(new ImageIcon(ImageResizer.getResizedImageForLargeImage(image.getBufferedImage())))));
-                frame.setSize(new Dimension(1024,768));
+                frame.setSize(new Dimension(1024, 768));
                 frame.setMinimumSize(new Dimension(800, 600));
             } else {
                 frame.add(picturePanel.add(new JLabel(new ImageIcon(image.getBufferedImage()))));
@@ -125,14 +124,10 @@ public class ImageGalleryFrame extends JFrame {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
                 }
             }
-            try {
-                mainContentPanel.removeAll();
-                List<Image> images = imageController.getImageList();
-                fillingTheContentSectionWithImages(images);
-                mainContentPanel.revalidate();
-            } catch (ControllerException exception) {
-                LOGGER.error(String.format("Error during new file saving process %s", exception.getMessage()));
-            }
+            mainContentPanel.removeAll();
+            List<Image> images = imageController.getImageList();
+            fillingTheContentSectionWithImages(images);
+            mainContentPanel.revalidate();
         });
     }
 }
