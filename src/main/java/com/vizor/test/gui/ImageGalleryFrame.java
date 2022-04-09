@@ -1,7 +1,6 @@
 package com.vizor.test.gui;
 
 import com.vizor.test.controller.ImageController;
-import com.vizor.test.exception.ApplicationException;
 import com.vizor.test.exception.ControllerException;
 import com.vizor.test.exception.ServiceException;
 import com.vizor.test.model.Image;
@@ -82,13 +81,20 @@ public class ImageGalleryFrame extends JFrame {
 
     private void openImageSeparateWindow(Image image) {
         JButton imageButton = new JButton();
-        imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImage(image.getBufferedImage())));
+        imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImageForButton(image.getBufferedImage())));
         imageButton.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
             JPanel picturePanel = new JPanel();
-            frame.add(picturePanel.add(new JLabel(new ImageIcon(image.getBufferedImage()))));
-            frame.setSize(new Dimension(image.getBufferedImage().getWidth() + 20, image.getBufferedImage().getHeight() + 45));
-            frame.setMinimumSize(new Dimension(image.getBufferedImage().getWidth(), image.getBufferedImage().getHeight()));
+
+            if (image.getBufferedImage().getHeight() > 768 && image.getBufferedImage().getWidth() > 1024) {
+                frame.add(picturePanel.add(new JLabel(new ImageIcon(ImageResizer.getResizedImageForLargeImage(image.getBufferedImage())))));
+                frame.setSize(new Dimension(1024,768));
+                frame.setMinimumSize(new Dimension(800, 600));
+            } else {
+                frame.add(picturePanel.add(new JLabel(new ImageIcon(image.getBufferedImage()))));
+                frame.setSize(new Dimension(image.getBufferedImage().getWidth() + 20, image.getBufferedImage().getHeight() + 45));
+                frame.setMinimumSize(new Dimension(image.getBufferedImage().getWidth(), image.getBufferedImage().getHeight()));
+            }
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });
