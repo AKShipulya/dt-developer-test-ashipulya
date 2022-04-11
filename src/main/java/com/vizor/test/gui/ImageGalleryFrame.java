@@ -23,6 +23,8 @@ public class ImageGalleryFrame extends JFrame {
     private static final Logger LOGGER = LogManager.getLogger();
 
     private final JButton addButton;
+    private final JButton searchButton;
+    private final JTextField searchField;
     private final ImageController imageController;
 
     private JScrollPane scrollPane;
@@ -37,6 +39,8 @@ public class ImageGalleryFrame extends JFrame {
         imageController = new ImageController(service);
 
         addButton = new JButton("Add image");
+        searchButton = new JButton("Search image");
+        searchField = new JTextField(30);
 
         headerPanelInitialization();
         mainContentPanelInitialization();
@@ -48,13 +52,15 @@ public class ImageGalleryFrame extends JFrame {
     private void headerPanelInitialization() {
         headerPanel = new JPanel();
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        headerPanel.setBackground(Color.WHITE);
 
-        JPanel gridPanel = new JPanel();
-        gridPanel.setLayout(new GridLayout(1, 1));
+        headerPanel.setBackground(Color.WHITE);
         addButton.setBackground(Color.WHITE);
-        gridPanel.add(addButton);
-        headerPanel.add(gridPanel);
+        searchButton.setBackground(Color.WHITE);
+
+        headerPanel.add(addButton);
+        headerPanel.add(searchButton);
+        headerPanel.add(searchField);
+
     }
 
     private void mainContentPanelInitialization() {

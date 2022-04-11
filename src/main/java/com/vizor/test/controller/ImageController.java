@@ -20,10 +20,11 @@ public class ImageController {
 
     public void addImage(File file) {
         imageService.addImage(file);
-        //TODO logs
+        LOGGER.debug("Controller: image {} has been added", file.getName());
     }
 
     public List<Image> getImageList() {
+        LOGGER.debug("Controller: list of images has been received");
         return imageService.getImageList();
     }
 }

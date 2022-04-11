@@ -31,12 +31,12 @@ public class ImageServiceImpl implements ImageService {
             LOGGER.error(String.format("Error during new image saving %s", exception.getMessage()));
             throw new ServiceException(exception);
         }
-        // TODO: 09.04.2022 Add LOGGER
+        LOGGER.debug("Service: image {} has been added", file.getName());
     }
 
     @Override
     public List<Image> getImageList() {
+        LOGGER.debug("Service: list of images has been received");
         return imageRepository.getAllImages();
-        // TODO: 09.04.2022 LOGGER - images has been received
     }
 }

@@ -38,7 +38,7 @@ public class ImageRepositoryImpl implements ImageRepository {
             LOGGER.error("File reading error, file: {}, error: {}", name, exception.getMessage());
             throw new DataException(exception);
         }
-        LOGGER.info("New image added {}", name);
+        LOGGER.info("New image has been added: {}", name);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                                 .setBufferedImage(ImageIO.read(file))
                                 .build());
                     } catch (IOException exception) {
-                        LOGGER.error("Images uploading error {}", exception.getMessage());
+                        LOGGER.error("Images uploading error: {}", exception.getMessage());
                         throw new DataException(exception);
                     }
                 });
