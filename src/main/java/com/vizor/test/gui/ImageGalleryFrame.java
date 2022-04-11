@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.List;
 
 public class ImageGalleryFrame extends JFrame {
@@ -45,7 +46,8 @@ public class ImageGalleryFrame extends JFrame {
         headerPanelInitialization();
         mainContentPanelInitialization();
         contentContainerInitialization();
-        addNewImageWithFileChooser();
+        addNewImageActionListener();
+        searchButtonActionListener();
     }
 
 
@@ -116,12 +118,12 @@ public class ImageGalleryFrame extends JFrame {
         mainContentPanel.revalidate();
     }
 
-    private void addNewImageWithFileChooser() {
+    private void addNewImageActionListener() {
         addButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter(".png", "png"));
-            int ret = fileChooser.showDialog(null, "Add image");
-            if (ret == JFileChooser.APPROVE_OPTION) {
+            int choice = fileChooser.showDialog(null, "Add image");
+            if (choice == JFileChooser.APPROVE_OPTION) {
                 try {
                     imageController.addImage(fileChooser.getSelectedFile());
                     BufferedImage newBufferedImage = ImageIO.read(fileChooser.getSelectedFile());
@@ -130,10 +132,30 @@ public class ImageGalleryFrame extends JFrame {
                             .build();
                     openImageSeparateWindow(newImage);
                     mainContentPanel.revalidate();
-                } catch (Exception exception) {
+                } catch (IOException exception) {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
                 }
             }
+        });
+    }
+
+    // FIXME: 11.04.2022 make reset to start form after search result
+    private void searchButtonActionListener() {
+        searchButton.addActionListener(e -> {
+            String searchName = searchField.getText();
+            List<Image> images = imageController.getImageList();
+            for (Image image : images) {
+                if (searchName.equalsIgnoreCase(image.getName())) {
+                    mainContentPanel.removeAll();
+                    openImageSeparateWindow(image);
+                    mainContentPanel.revalidate();
+                    LOGGER.debug("Image {} has been found", image.getName());
+                } else {
+                    LOGGER.debug("Image has been not found");
+                    imageListInitialization(images);
+                }
+            }
+            mainContentPanel.revalidate();
         });
     }
 }

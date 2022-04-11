@@ -56,7 +56,6 @@ public class ImageRepositoryImpl implements ImageRepository {
         if (files == null) {
             return images;
         }
-
         Arrays.stream(files)
                 .forEach(file -> {
                     try {
