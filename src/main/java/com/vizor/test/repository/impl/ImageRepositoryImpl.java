@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ImageRepositoryImpl implements ImageRepository {
 
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final String FILE_NAME_REGEX = "\\.";
     private static final String PATH = "assets";
 
     @Override
@@ -31,6 +33,7 @@ public class ImageRepositoryImpl implements ImageRepository {
                         imageName.endsWith(".png");
             });
             if (files != null && files.length != 0) {
+                JOptionPane.showMessageDialog(null, String.format("Image \"%s\" already exists", name));
                 throw new DataException(String.format("Image with this name already exists: %s", name));
             }
             ImageIO.write(bufferedImage, "png", file);
@@ -59,7 +62,7 @@ public class ImageRepositoryImpl implements ImageRepository {
         Arrays.stream(files)
                 .forEach(file -> {
                     try {
-                        String name = file.getName().split("\\.", 2)[0];
+                        String name = file.getName().split(FILE_NAME_REGEX, 2)[0];
                         images.add(new ImageBuilder().setName(name)
                                 .setBufferedImage(ImageIO.read(file))
                                 .build());

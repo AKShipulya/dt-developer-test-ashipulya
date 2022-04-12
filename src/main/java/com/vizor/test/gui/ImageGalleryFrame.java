@@ -24,6 +24,11 @@ import java.util.List;
 public class ImageGalleryFrame extends JFrame {
 
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final String ADD_BUTTON_NAME = "Add image";
+    private static final String SEARCH_BUTTON_NAME = "Search image";
+    private static final String RESET_BUTTON_NAME = "Reset search";
+    private static final int LARGE_IMAGE_DIMENSION_WIDTH = 1024;
+    private static final int LARGE_IMAGE_DIMENSION_HEIGHT = 768;
 
     private final JButton addButton;
     private final JButton searchButton;
@@ -42,9 +47,9 @@ public class ImageGalleryFrame extends JFrame {
         ImageService service = new ImageServiceImpl(repository);
         imageController = new ImageController(service);
 
-        addButton = new JButton("Add image");
-        searchButton = new JButton("Search image");
-        searchResetButton = new JButton("Search reset");
+        addButton = new JButton(ADD_BUTTON_NAME);
+        searchButton = new JButton(SEARCH_BUTTON_NAME);
+        searchResetButton = new JButton(RESET_BUTTON_NAME);
         searchField = new JTextField(30);
 
         headerPanelInitialization();
@@ -101,10 +106,10 @@ public class ImageGalleryFrame extends JFrame {
         imageButton.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
             JPanel picturePanel = new JPanel();
-
+            //frame settings for large images - if image is too large here it will resize to 1024x768
             if (image.getBufferedImage().getHeight() > 768 && image.getBufferedImage().getWidth() > 1024) {
                 frame.add(picturePanel.add(new JLabel(new ImageIcon(ImageResizer.getResizedImageForLargeImage(image.getBufferedImage())))));
-                frame.setSize(new Dimension(1024, 768));
+                frame.setSize(new Dimension(LARGE_IMAGE_DIMENSION_WIDTH, LARGE_IMAGE_DIMENSION_HEIGHT));
                 frame.setMinimumSize(new Dimension(800, 600));
             } else {
                 frame.add(picturePanel.add(new JLabel(new ImageIcon(image.getBufferedImage()))));
@@ -133,7 +138,7 @@ public class ImageGalleryFrame extends JFrame {
         addButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new FileNameExtensionFilter(".png", "png"));
-            int choice = fileChooser.showDialog(null, "Add image");
+            int choice = fileChooser.showDialog(null, ADD_BUTTON_NAME);
             if (choice == JFileChooser.APPROVE_OPTION) {
                 try {
                     imageController.addImage(fileChooser.getSelectedFile());
@@ -144,7 +149,7 @@ public class ImageGalleryFrame extends JFrame {
                     createSeparateButtonForImage(newImage);
                     mainContentPanel.revalidate();
                 } catch (IOException exception) {
-                    LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
+                    LOGGER.error("\"Add new image\" action listener error: {}", exception.getMessage());
                 }
             }
         });

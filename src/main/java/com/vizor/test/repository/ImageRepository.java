@@ -12,12 +12,14 @@ public interface ImageRepository {
      * Add image
      * @param name the name
      * @param bufferedImage the buffered image
+     * @throws DataException
      */
-    void addImage(String name, BufferedImage bufferedImage);
+    void addImage(String name, BufferedImage bufferedImage) throws DataException;
 
     /**
      * Gets images list
      * @return the images list
+     * @throws DataException
      */
     List<Image> getAllImages() throws DataException;
 }

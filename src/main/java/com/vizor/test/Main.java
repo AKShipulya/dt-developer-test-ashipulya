@@ -13,7 +13,7 @@ public class Main {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int WIDTH = 1024;
     private static final int HEIGHT = 768;
-    private static final String FRAME_TITLE = "DT Developer Test";
+    private static final String FRAME_TITLE = "DT Developer Test made by Andrey Shipulya";
 
     public void run() {
         try {

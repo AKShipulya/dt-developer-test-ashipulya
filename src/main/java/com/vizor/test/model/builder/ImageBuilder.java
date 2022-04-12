@@ -20,6 +20,7 @@ public class ImageBuilder {
 
     /**
      * Sets name
+     *
      * @param name the name
      * @return the name
      */
@@ -30,6 +31,7 @@ public class ImageBuilder {
 
     /**
      * Sets buffered image
+     *
      * @param bufferedImage the buffered image
      * @return the buffered image
      */
@@ -40,6 +42,7 @@ public class ImageBuilder {
 
     /**
      * Builds image
+     *
      * @return the image
      */
     public Image build() {

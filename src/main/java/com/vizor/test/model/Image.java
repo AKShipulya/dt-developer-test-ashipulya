@@ -9,6 +9,7 @@ public class Image {
 
     /**
      * Gets name.
+     *
      * @return the name
      */
     public String getName() {
@@ -17,6 +18,7 @@ public class Image {
 
     /**
      * Sets name.
+     *
      * @param name the name
      */
     public void setName(String name) {
@@ -25,6 +27,7 @@ public class Image {
 
     /**
      * Gets buffered image
+     *
      * @return the buffered image
      */
     public BufferedImage getBufferedImage() {
@@ -33,6 +36,7 @@ public class Image {
 
     /**
      * Sets buffered image
+     *
      * @param bufferedImage the buffered image
      */
     public void setBufferedImage(BufferedImage bufferedImage) {

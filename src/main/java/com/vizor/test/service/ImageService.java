@@ -10,14 +10,15 @@ public interface ImageService {
 
     /**
      * Add image
+     *
      * @param file the file
      */
-    void addImage(File file) throws ServiceException;
+    void addImage(File file);
 
     /**
      * Gets images list
+     *
      * @return the images list
-     * @throws ServiceException
      */
-    List<Image> getImageList() throws ServiceException;
+    List<Image> getImageList();
 }

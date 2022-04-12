@@ -15,6 +15,7 @@ import java.util.List;
 public class ImageServiceImpl implements ImageService {
 
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final String FILE_NAME_REGEX = "\\.";
 
     private final ImageRepository imageRepository;
 
@@ -24,7 +25,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void addImage(File file) {
-        String name = file.getName().split("\\.", 2)[0];
+        String name = file.getName().split(FILE_NAME_REGEX, 2)[0];
         try {
             imageRepository.addImage(name, ImageIO.read(file));
         } catch (IOException exception) {
