@@ -33,12 +33,15 @@ public class ImageGalleryFrame extends JFrame {
     private final JButton addButton;
     private final JButton searchButton;
     private final JButton searchResetButton;
+    private final JButton nextPageButton;
+    private final JButton previousPageButton;
     private final JTextField searchField;
     private final ImageController imageController;
 
     private JScrollPane scrollPane;
     private JPanel headerPanel;
     private JPanel mainContentPanel;
+    private JPanel bottomPanel;
 
 
     public ImageGalleryFrame(String title) {
@@ -51,13 +54,17 @@ public class ImageGalleryFrame extends JFrame {
         searchButton = new JButton(SEARCH_BUTTON_NAME);
         searchResetButton = new JButton(RESET_BUTTON_NAME);
         searchField = new JTextField(30);
+        nextPageButton = new JButton(">");
+        previousPageButton = new JButton("<");
 
         headerPanelInitialization();
         mainContentPanelInitialization();
+        bottomPanelInitialization();
         contentContainerInitialization();
         addNewImageActionListener();
         searchButtonActionListener();
         searchResetActionListener();
+        nextPageActionListener();
     }
 
 
@@ -78,7 +85,6 @@ public class ImageGalleryFrame extends JFrame {
         headerPanel.add(searchField);
         headerPanel.add(searchButton);
         headerPanel.add(searchResetButton);
-
     }
 
     private void mainContentPanelInitialization() {
@@ -89,6 +95,16 @@ public class ImageGalleryFrame extends JFrame {
         imageListInitialization(images);
     }
 
+    private void bottomPanelInitialization() {
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        bottomPanel.setBackground(Color.WHITE);
+        previousPageButton.setBackground(Color.WHITE);
+        nextPageButton.setBackground(Color.WHITE);
+        bottomPanel.add(previousPageButton, BorderLayout.CENTER);
+        bottomPanel.add(nextPageButton, BorderLayout.CENTER);
+    }
+
     private void contentContainerInitialization() {
         Container container = this.getContentPane();
         container.setLayout(new BorderLayout(0, 1));
@@ -97,12 +113,17 @@ public class ImageGalleryFrame extends JFrame {
         container.add(headerPanel, BorderLayout.NORTH);
         container.add(mainContentPanel);
         scrollPane = new JScrollPane(mainContentPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(25);
+        scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
         container.add(scrollPane);
+        container.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void createSeparateButtonForImage(Image image) {
         JButton imageButton = new JButton();
         imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImageForButton(image.getBufferedImage())));
+        imageButton.setOpaque(false);
+        imageButton.setContentAreaFilled(false);
         imageButton.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
             JPanel picturePanel = new JPanel();
@@ -121,6 +142,7 @@ public class ImageGalleryFrame extends JFrame {
         });
 
         JPanel imageBox = new JPanel();
+        imageBox.setBackground(Color.WHITE);
         imageBox.setLayout(new BorderLayout(2, 2));
         imageBox.add(imageButton, BorderLayout.CENTER);
         imageBox.add(new JLabel(image.getName()), BorderLayout.SOUTH);
@@ -177,6 +199,12 @@ public class ImageGalleryFrame extends JFrame {
             List<Image> images = imageController.getImageList();
             imageListInitialization(images);
             mainContentPanel.revalidate();
+        });
+    }
+
+    private void nextPageActionListener() {
+        nextPageButton.addActionListener(e -> {
+//            scrollPane.getVerticalScrollBar().;
         });
     }
 }
