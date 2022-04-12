@@ -13,10 +13,12 @@ import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ImageGalleryFrame extends JFrame {
@@ -25,6 +27,7 @@ public class ImageGalleryFrame extends JFrame {
 
     private final JButton addButton;
     private final JButton searchButton;
+    private final JButton searchResetButton;
     private final JTextField searchField;
     private final ImageController imageController;
 
@@ -41,6 +44,7 @@ public class ImageGalleryFrame extends JFrame {
 
         addButton = new JButton("Add image");
         searchButton = new JButton("Search image");
+        searchResetButton = new JButton("Search reset");
         searchField = new JTextField(30);
 
         headerPanelInitialization();
@@ -48,20 +52,27 @@ public class ImageGalleryFrame extends JFrame {
         contentContainerInitialization();
         addNewImageActionListener();
         searchButtonActionListener();
+        searchResetActionListener();
     }
 
 
     private void headerPanelInitialization() {
         headerPanel = new JPanel();
+        JPanel blankPanel = new JPanel();
+        blankPanel.setBorder(new EmptyBorder(0, 0, 0, 300));
+        blankPanel.setBackground(Color.WHITE);
         headerPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
         headerPanel.setBackground(Color.WHITE);
         addButton.setBackground(Color.WHITE);
         searchButton.setBackground(Color.WHITE);
+        searchResetButton.setBackground(Color.WHITE);
 
         headerPanel.add(addButton);
-        headerPanel.add(searchButton);
+        headerPanel.add(blankPanel);
         headerPanel.add(searchField);
+        headerPanel.add(searchButton);
+        headerPanel.add(searchResetButton);
 
     }
 
@@ -84,7 +95,7 @@ public class ImageGalleryFrame extends JFrame {
         container.add(scrollPane);
     }
 
-    private void openImageSeparateWindow(Image image) {
+    private void createSeparateButtonForImage(Image image) {
         JButton imageButton = new JButton();
         imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImageForButton(image.getBufferedImage())));
         imageButton.addActionListener(e -> {
@@ -113,7 +124,7 @@ public class ImageGalleryFrame extends JFrame {
 
     private void imageListInitialization(List<Image> images) {
         for (Image image : images) {
-            openImageSeparateWindow(image);
+            createSeparateButtonForImage(image);
         }
         mainContentPanel.revalidate();
     }
@@ -130,7 +141,7 @@ public class ImageGalleryFrame extends JFrame {
                     Image newImage = new ImageBuilder().setName(fileChooser.getSelectedFile().getName())
                             .setBufferedImage(newBufferedImage)
                             .build();
-                    openImageSeparateWindow(newImage);
+                    createSeparateButtonForImage(newImage);
                     mainContentPanel.revalidate();
                 } catch (IOException exception) {
                     LOGGER.error(String.format("Action listener error %s", exception.getMessage()));
@@ -139,22 +150,27 @@ public class ImageGalleryFrame extends JFrame {
         });
     }
 
-    // FIXME: 11.04.2022 make reset to start form after search result
     private void searchButtonActionListener() {
         searchButton.addActionListener(e -> {
             String searchName = searchField.getText();
-            List<Image> images = imageController.getImageList();
-            for (Image image : images) {
-                if (searchName.equalsIgnoreCase(image.getName())) {
+            List<Image> images = new ArrayList<>();
+            for (Image image : imageController.getImageList()) {
+                if (image.getName().toLowerCase().contains(searchName.toLowerCase())) {
                     mainContentPanel.removeAll();
-                    openImageSeparateWindow(image);
+                    images.add(image);
+                    imageListInitialization(images);
                     mainContentPanel.revalidate();
                     LOGGER.debug("Image {} has been found", image.getName());
-                } else {
-                    LOGGER.debug("Image has been not found");
-                    imageListInitialization(images);
                 }
             }
+        });
+    }
+
+    private void searchResetActionListener() {
+        searchResetButton.addActionListener(e -> {
+            mainContentPanel.removeAll();
+            List<Image> images = imageController.getImageList();
+            imageListInitialization(images);
             mainContentPanel.revalidate();
         });
     }
