@@ -42,6 +42,7 @@ public class ImageGalleryFrame extends JFrame {
     private JPanel headerPanel;
     private JPanel mainContentPanel;
     private JPanel bottomPanel;
+    private List<Image> images;
 
 
     public ImageGalleryFrame(String title) {
@@ -91,7 +92,7 @@ public class ImageGalleryFrame extends JFrame {
         mainContentPanel = new JPanel();
         mainContentPanel.setLayout(new GridLayout(0, 4, 2, 2));
         mainContentPanel.setBackground(Color.WHITE);
-        List<Image> images = imageController.getImageList();
+        images = imageController.getImageList();
         imageListInitialization(images);
     }
 
@@ -124,6 +125,25 @@ public class ImageGalleryFrame extends JFrame {
         imageButton.setIcon(new ImageIcon(ImageResizer.getResizedImageForButton(image.getBufferedImage())));
         imageButton.setOpaque(false);
         imageButton.setContentAreaFilled(false);
+
+        openImageInSeparateFrame(image, imageButton);
+
+        JPanel imageBox = new JPanel();
+        imageBox.setBackground(Color.WHITE);
+        imageBox.setLayout(new BorderLayout(2, 2));
+        imageBox.add(imageButton, BorderLayout.CENTER);
+        imageBox.add(new JLabel(image.getName()), BorderLayout.SOUTH);
+        mainContentPanel.add(imageBox);
+    }
+
+    private void imageListInitialization(List<Image> images) {
+        for (Image image : images) {
+            createSeparateButtonForImage(image);
+        }
+        mainContentPanel.revalidate();
+    }
+
+    private void openImageInSeparateFrame(Image image, JButton imageButton) {
         imageButton.addActionListener(e -> {
             JFrame frame = new JFrame(image.getName());
             JPanel picturePanel = new JPanel();
@@ -140,20 +160,6 @@ public class ImageGalleryFrame extends JFrame {
             frame.setVisible(true);
             frame.setLocationRelativeTo(null);
         });
-
-        JPanel imageBox = new JPanel();
-        imageBox.setBackground(Color.WHITE);
-        imageBox.setLayout(new BorderLayout(2, 2));
-        imageBox.add(imageButton, BorderLayout.CENTER);
-        imageBox.add(new JLabel(image.getName()), BorderLayout.SOUTH);
-        mainContentPanel.add(imageBox);
-    }
-
-    private void imageListInitialization(List<Image> images) {
-        for (Image image : images) {
-            createSeparateButtonForImage(image);
-        }
-        mainContentPanel.revalidate();
     }
 
     private void addNewImageActionListener() {
@@ -180,7 +186,7 @@ public class ImageGalleryFrame extends JFrame {
     private void searchButtonActionListener() {
         searchButton.addActionListener(e -> {
             String searchName = searchField.getText();
-            List<Image> images = new ArrayList<>();
+            images = new ArrayList<>();
             for (Image image : imageController.getImageList()) {
                 if (image.getName().toLowerCase().contains(searchName.toLowerCase())) {
                     mainContentPanel.removeAll();
@@ -196,7 +202,7 @@ public class ImageGalleryFrame extends JFrame {
     private void searchResetActionListener() {
         searchResetButton.addActionListener(e -> {
             mainContentPanel.removeAll();
-            List<Image> images = imageController.getImageList();
+            images = imageController.getImageList();
             imageListInitialization(images);
             mainContentPanel.revalidate();
         });
