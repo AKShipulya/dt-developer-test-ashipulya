@@ -1,0 +1,27 @@
+plugins {
+    id 'application'
+}
+
+group 'com.vizor.test'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'com.vizor.test.Main'
+}
+
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+}
+
+test {
+    useJUnit()
+
+    maxHeapSize = '1G'
+}

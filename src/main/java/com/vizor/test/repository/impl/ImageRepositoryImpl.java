@@ -1,0 +1,76 @@
+package com.vizor.test.repository.impl;
+
+import com.vizor.test.exception.DataException;
+import com.vizor.test.model.Image;
+import com.vizor.test.model.builder.ImageBuilder;
+import com.vizor.test.repository.ImageRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class ImageRepositoryImpl implements ImageRepository {
+
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String FILE_NAME_REGEX = "\\.";
+    private static final String PATH = "assets";
+
+    @Override
+    public void addImage(String name, BufferedImage bufferedImage) throws DataException {
+        try {
+            File file = new File(PATH.concat("\\").concat(name).concat(".png"));
+            File[] files = new File(PATH).listFiles(path -> {
+                String imageName = path.getName();
+                return path.isFile() &&
+                        imageName.equals(name.concat(".png")) &&
+                        imageName.endsWith(".png");
+            });
+            if (files != null && files.length != 0) {
+                JOptionPane.showMessageDialog(null, String.format("Image \"%s\" already exists", name));
+                throw new DataException(String.format("Image with this name already exists: %s", name));
+            }
+            ImageIO.write(bufferedImage, "png", file);
+        } catch (IOException exception) {
+            LOGGER.error("File reading error, file: {}, error: {}", name, exception.getMessage());
+            throw new DataException(exception);
+        }
+        LOGGER.info("New image has been added: {}", name);
+    }
+
+    @Override
+    public List<Image> getAllImages() throws DataException {
+        File[] files = new File(PATH).listFiles(path -> {
+            String imageName = path.getName().toLowerCase();
+            return path.isFile() && imageName.endsWith(".png");
+        });
+        LOGGER.info("List of images has been received");
+        return initImageList(files);
+    }
+
+    private List<Image> initImageList(File[] files) throws DataException {
+        List<Image> images = new ArrayList<>();
+        if (files == null) {
+            return images;
+        }
+        Arrays.stream(files)
+                .forEach(file -> {
+                    try {
+                        String name = file.getName().split(FILE_NAME_REGEX, 2)[0];
+                        images.add(new ImageBuilder().setName(name)
+                                .setBufferedImage(ImageIO.read(file))
+                                .build());
+                    } catch (IOException exception) {
+                        LOGGER.error("Images uploading error: {}", exception.getMessage());
+                        throw new DataException(exception);
+                    }
+                });
+        return images;
+    }
+}
