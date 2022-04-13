@@ -115,7 +115,7 @@ public class ImageGalleryFrame extends JFrame {
         scrollPane = new JScrollPane(mainContentPanel);
         scrollPane.getVerticalScrollBar().setUnitIncrement(25);
         scrollPane.getVerticalScrollBar().setBackground(Color.WHITE);
-        container.add(scrollPane);
+        container.add(scrollPane, FlowLayout.CENTER);
         container.add(bottomPanel, BorderLayout.SOUTH);
     }
 
