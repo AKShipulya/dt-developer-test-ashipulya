@@ -33,10 +33,10 @@ public class ImageGalleryFrame extends JFrame {
     private final JButton addButton;
     private final JButton searchButton;
     private final JButton searchResetButton;
-    private final JButton nextPageButton;
-    private final JButton previousPageButton;
     private final JTextField searchField;
     private final ImageController imageController;
+//    private final JButton nextPageButton;
+//    private final JButton previousPageButton;
 
     private JScrollPane scrollPane;
     private JPanel headerPanel;
@@ -54,8 +54,8 @@ public class ImageGalleryFrame extends JFrame {
         searchButton = new JButton(SEARCH_BUTTON_NAME);
         searchResetButton = new JButton(RESET_BUTTON_NAME);
         searchField = new JTextField(30);
-        nextPageButton = new JButton(">");
-        previousPageButton = new JButton("<");
+//        nextPageButton = new JButton(">");
+//        previousPageButton = new JButton("<");
 
         headerPanelInitialization();
         mainContentPanelInitialization();
@@ -64,7 +64,7 @@ public class ImageGalleryFrame extends JFrame {
         addNewImageActionListener();
         searchButtonActionListener();
         searchResetActionListener();
-        nextPageActionListener();
+//        nextPageActionListener();
     }
 
 
@@ -99,10 +99,10 @@ public class ImageGalleryFrame extends JFrame {
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.setBackground(Color.WHITE);
-        previousPageButton.setBackground(Color.WHITE);
-        nextPageButton.setBackground(Color.WHITE);
-        bottomPanel.add(previousPageButton, BorderLayout.CENTER);
-        bottomPanel.add(nextPageButton, BorderLayout.CENTER);
+//        previousPageButton.setBackground(Color.WHITE);
+//        nextPageButton.setBackground(Color.WHITE);
+//        bottomPanel.add(previousPageButton, BorderLayout.CENTER);
+//        bottomPanel.add(nextPageButton, BorderLayout.CENTER);
     }
 
     private void contentContainerInitialization() {
@@ -202,9 +202,8 @@ public class ImageGalleryFrame extends JFrame {
         });
     }
 
-    private void nextPageActionListener() {
-        nextPageButton.addActionListener(e -> {
-//            scrollPane.getVerticalScrollBar().;
-        });
-    }
+//    private void nextPageActionListener() {
+//        nextPageButton.addActionListener(e -> {
+//        });
+//    }
 }
